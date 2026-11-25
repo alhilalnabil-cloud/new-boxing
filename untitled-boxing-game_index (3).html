@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Untitled Boxing Game — PPV Broadcast &amp; Realistic Anatomy Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;0,900;1,900&family=JetBrains+Mono:wght@600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="inMenu">
+
+<div id="canvasContainer"></div>
+<div id="calloutText">COUNTER!</div>
+
+<!-- PPV FIGHT CARD POSTER MENU -->
+<div id="mainMenu">
+  <div class="posterStage">
+    <div class="broadcastTicker">
+      <span class="liveDot"></span>
+      <span>WORLD CHAMPIONSHIP FIGHT NIGHT • LIVE PPV EDITION</span>
+    </div>
+
+    <div class="posterHeader">
+      <div class="pursePill">PURSE: $<span id="menuCashTxt">350</span></div>
+      <div class="posterTitle">UNTITLED <span>BOXING</span></div>
+      <div class="posterSubtitle">PRO CIRCUIT • REALISTIC ANATOMY • 7 FIGHTING STYLES</div>
+    </div>
+
+    <!-- CONTRACT ROLL -->
+    <div class="contractBar">
+      <div class="contractMeta">
+        <span class="contractLabel">FIGHT CONTRACT ROLL</span>
+        <span class="contractCost">$150 / ROLL</span>
+      </div>
+      <button class="btnRoll" id="btnGachaSpin" type="button">ROLL NEW FIGHTING STYLE ($150)</button>
+    </div>
+
+    <!-- STYLE SELECTOR -->
+    <div class="panelBlock">
+      <div class="panelTop">
+        <div>
+          <div class="microLabel">ACTIVE STYLE</div>
+          <div class="activeStyleTitle" id="menuStyleName">HITMAN STYLE</div>
+        </div>
+        <span class="rarityBadge" id="menuStyleRarity">LEGENDARY</span>
+      </div>
+      <p class="styleDesc" id="menuStyleDesc">Flicker jab jarak jauh mematikan, jangkauan M1 sangat panjang, tetapi pertahanan guard sedikit lebih tipis.</p>
+      <div class="styleGrid" id="styleButtonsList"></div>
+    </div>
+
+    <!-- OPPONENT SELECTOR -->
+    <div class="panelBlock">
+      <div class="panelTop">
+        <div class="microLabel">SELECT OPPONENT / BOSS</div>
+        <select id="botRosterSelect" class="rosterDropdown" aria-label="Pilih Lawan"></select>
+      </div>
+      <div class="opponentCards" id="rosterCardsList"></div>
+    </div>
+
+    <!-- ENTER RING & SFX -->
+    <div class="actionRow">
+      <button class="btnEnterRing" id="btnPlayGame" type="button">ENTER THE RING</button>
+      <button class="btnSfx" id="btnAudioToggle" type="button">SFX: ON</button>
+    </div>
+  </div>
+</div>
+
+<!-- GACHA UNLOCK MODAL -->
+<div id="gachaModal">
+  <div class="modalBox">
+    <div class="modalTag" id="gachaRarityTxt">LEGENDARY STYLE UNLOCKED</div>
+    <div class="modalHeading" id="gachaStyleUnlockedTxt">HITMAN STYLE</div>
+    <button class="btnModalOk" id="btnCloseGacha" type="button">EQUIP &amp; CONTINUE</button>
+  </div>
+</div>
+
+<!-- IN-GAME PPV HUD -->
+<div id="hud">
+  <div class="topHud">
+    <!-- PLAYER CORNER -->
+    <div class="cornerCard blueCorner">
+      <div class="cornerHead">
+        <span class="cornerName">PLAYER (YOU)</span>
+        <span class="cornerStyle" id="pStyleTag">HITMAN STYLE</span>
+      </div>
+      <div class="meterRow">
+        <div class="meterText"><span>HP</span><span id="playerHpTxt">100 / 100</span></div>
+        <div class="hpTrack">
+          <div id="pGhost" class="hpGhost"></div>
+          <div id="pHp" class="hpFill playerHpFill"></div>
+        </div>
+      </div>
+      <div class="meterRow compact">
+        <div class="staminaTrack"><div id="pStamina" class="staminaFill"></div></div>
+      </div>
+    </div>
+
+    <!-- CENTER CLOCK -->
+    <div class="clockBox">
+      <div class="boutTag">ROUND 1 • PPV BOUT</div>
+      <div class="clockDigits" id="timerTxt">90</div>
+      <div class="purseMini">$<span id="hudCashTxt">350</span></div>
+    </div>
+
+    <!-- OPPONENT CORNER -->
+    <div class="cornerCard redCorner">
+      <div class="cornerHead reverse">
+        <span class="cornerName" id="enemyName">OPPONENT</span>
+        <span class="cornerStyle redTag" id="eStyleTag">BASIC STYLE</span>
+      </div>
+      <div class="meterRow">
+        <div class="meterText reverse"><span>HP</span><span id="enemyHpTxt">100 / 100</span></div>
+        <div class="hpTrack">
+          <div id="eGhost" class="hpGhost rightGhost"></div>
+          <div id="eHp" class="hpFill enemyHpFill"></div>
+        </div>
+      </div>
+      <div class="meterRow compact">
+        <div class="staminaTrack"><div id="eStamina" class="staminaFill rightStamina"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottomHud">
+    <div class="ultCard">
+      <div class="meterText">
+        <span class="ultLabel">ULTIMATE [Q / R]</span>
+        <span id="ultTxt" class="ultPct">0%</span>
+      </div>
+      <div class="ultTrack"><div id="ultBar" class="ultFill"></div></div>
+    </div>
+
+    <div class="comboCluster">
+      <div class="comboNum" id="comboCount">0</div>
+      <div class="comboLabel">COMBO</div>
+    </div>
+
+    <div class="keycapDock">
+      <div><span class="kc">WASD</span> Move &nbsp;•&nbsp; <span class="kc">SPACE</span> Sway/Dash &nbsp;•&nbsp; <span class="kc">F</span> Guard</div>
+      <div><span class="kc">M1 / J</span> Jab-Cross &nbsp;•&nbsp; <span class="kc">M2 / K</span> Heavy &nbsp;•&nbsp; <span class="kc">E</span> Feint &nbsp;•&nbsp; <span class="kc">Q / R</span> Ult</div>
+    </div>
+  </div>
+</div>
+
+<!-- KO OVERLAY -->
+<div id="koOverlay">
+  <div class="modalBox koBox">
+    <div class="modalHeading" id="koTitle">KNOCKOUT!</div>
+    <div class="koSub" id="koSub">MATCH FINISHED</div>
+    <div class="koPayout" id="koRewardTxt">+$120 PURSE</div>
+    <div class="koActions">
+      <button class="btnEnterRing" id="btnRestart" type="button">REMATCH</button>
+      <button class="btnSecondary" id="btnBackMenu" type="button">FIGHT CARD</button>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+<script type="module" src="game.js"></script>
+</body>
+</html>
